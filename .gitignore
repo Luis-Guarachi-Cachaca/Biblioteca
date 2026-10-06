@@ -1,0 +1,29 @@
+# Python / Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Databases & Persistent Data
+*.db
+*.sqlite3
+data/
+
+# Environment Variables & Secret Configuration
+.env
+.env.local
+
+# IDE & OS Specific
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Docker Logs & Local Artifacts
+*.log

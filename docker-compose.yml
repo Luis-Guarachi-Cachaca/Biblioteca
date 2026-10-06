@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  catalogo:
+    build:
+      context: ./catalogo
+      dockerfile: Dockerfile
+    container_name: catalogo_service
+    ports:
+      - "8001:8001"
+    volumes:
+      - catalogo_data:/data
+    networks:
+      - biblioteca-network
+    restart: unless-stopped
+
+  prestamos:
+    build:
+      context: ./prestamos
+      dockerfile: Dockerfile
+    container_name: prestamos_service
+    ports:
+      - "8002:8002"
+    environment:
+      - CATALOGO_URL=http://catalogo:8001
+      - NOTIFICACIONES_URL=http://notificaciones:8003
+      - DIAS_PRESTAMO=7
+      - MULTA_POR_DIA=5
+      - DIAS_AVISO=2
+    volumes:
+      - prestamos_data:/data
+    networks:
+      - biblioteca-network
+    depends_on:
+      - catalogo
+      - notificaciones
+    restart: unless-stopped
+
+  notificaciones:
+    build:
+      context: ./notificaciones
+      dockerfile: Dockerfile
+    container_name: notificaciones_service
+    ports:
+      - "8003:8003"
+    volumes:
+      - notificaciones_data:/data
+    networks:
+      - biblioteca-network
+    restart: unless-stopped
+
+networks:
+  biblioteca-network:
+    driver: bridge
+
+volumes:
+  catalogo_data:
+  prestamos_data:
+  notificaciones_data:
