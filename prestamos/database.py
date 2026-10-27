@@ -25,9 +25,22 @@ def init_db():
             fecha_prestamo TEXT NOT NULL,
             fecha_limite TEXT NOT NULL,
             fecha_devolucion TEXT,
-            estado TEXT NOT NULL DEFAULT 'ACTIVO'
+            estado TEXT NOT NULL DEFAULT 'ACTIVO',
+            aviso_vencimiento_enviado INTEGER NOT NULL DEFAULT 0,
+            ci TEXT
         )
     ''')
+
+    # Migrate databases created before reminder deduplication was introduced.
+    cursor.execute("PRAGMA table_info(prestamos)")
+    columnas = {row[1] for row in cursor.fetchall()}
+    if 'aviso_vencimiento_enviado' not in columnas:
+        cursor.execute(
+            "ALTER TABLE prestamos ADD COLUMN aviso_vencimiento_enviado "
+            "INTEGER NOT NULL DEFAULT 0"
+        )
+    if 'ci' not in columnas:
+        cursor.execute("ALTER TABLE prestamos ADD COLUMN ci TEXT")
     
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS multas (

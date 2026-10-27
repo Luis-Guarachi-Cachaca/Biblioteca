@@ -24,7 +24,7 @@ services:
     environment:
       - CATALOGO_URL=http://catalogo:8001
       - NOTIFICACIONES_URL=http://notificaciones:8003
-      - DIAS_PRESTAMO=7
+      - DIAS_PRESTAMO=1
       - MULTA_POR_DIA=5
       - DIAS_AVISO=2
     volumes:
